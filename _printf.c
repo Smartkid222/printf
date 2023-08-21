@@ -12,10 +12,10 @@ int _printf(const char *format, ...)
 	int i;
 	int print = 0;
 	int print_chars = 0;
-	int flag;
-	int wide;
-	int precision;
-	int size;
+	int f;
+	int w;
+	int p;
+	int s;
 	int buff_ind = 0;
 	va_list list;
 	char buffer[BUFF_SIZE];
@@ -37,10 +37,10 @@ int _printf(const char *format, ...)
 		else
 		{
 			print_buffer(buffer, &buff_ind);
-			flag = get_f(format, &i);
-			wide = get_w(format, &i, list);
-			precision = get_p(format, &i, list);
-			size = get_s(format, &i);
+			f = get_f(format, &i);
+			w = get_w(format, &i, list);
+			p = get_p(format, &i, list);
+			s = get_s(format, &i);
 			++i;
 			print = handle_print(format, &i, list, buffer,
 				f, w, p, s);
