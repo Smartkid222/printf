@@ -12,7 +12,7 @@ int _printf(const char *format, ...)
 	int i;
 	int print = 0;
 	int print_chars = 0;
-	int flags;
+	int flag;
 	int w;
 	int precision;
 	int size;
@@ -37,13 +37,13 @@ int _printf(const char *format, ...)
 		else
 		{
 			print_buffer(buffer, &buff_ind);
-			flags = get_flags(format, &i);
+			flag = get_flag(format, &i);
 			w = get_w(format, &i, list);
 			precision = get_precision(format, &i, list);
 			size = get_size(format, &i);
 			++i;
 			print = handle_print(format, &i, list, buffer,
-				flags, w, precision, size);
+				flag, w, precision, size);
 			if (print == -1)
 				return (-1);
 			print_chars = print_chars + print;
