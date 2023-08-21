@@ -1,12 +1,12 @@
 #include "main.h"
 
 /**
- * get_flag - gets flag
+ * get_f - gets flag
  * @format: Formatted string which prints an arguments
  * @i: takes a parameter.
  * Return: Flags:
  */
-int get_flag(const char *format, int *i)
+int get_f(const char *format, int *i)
 {
 
 	int s;

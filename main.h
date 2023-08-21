@@ -6,6 +6,6 @@
 
 int _printf(const char *format, ...);
 void print_buffer(char buffer[], int *buff_ind);
-int get_flag(const char *format, int *i);
+int get_f(const char *format, int *i);
 
 #endif
