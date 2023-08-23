@@ -1,71 +1,49 @@
 #include "main.h"
 
-void print_buffer(char buffer[], int *buff_ind);
-
 /**
- * _printf - Printf function
- * @format: format.
- * Return: Printed chars.
+ * _printf - prints and input into the standard output
+ * @format: the format string
+ *
+ * Return: number of bytes printed
  */
 int _printf(const char *format, ...)
 {
-	int i;
-	int print = 0;
-	int print_chars = 0;
-	int f;
-	int w;
-	int p;
-	int s;
-	int buff_ind = 0;
-	va_list list;
-	char buffer[BUFF_SIZE];
+	int sum = 0;
+	va_list ap;
+	char *p, *start;
+	params_t params = PARAMS_INIT;
 
-	if (format == NULL)
+	va_start(ap, format);
+
+	if (!format || (format[0] == '%' && !format[1]))/* checking NULL character*/
 		return (-1);
-
-	va_start(list, format);
-
-	for (i = 0; format && format[i] != '\0'; i++)
+	if (format[0] == '%' && format[1] == ' ' && !format[2])
+		return (-1);
+	for (p = (char *)format; *p; p++)
 	{
-		if (format[i] != '%')
+		init_params(&params, ap);
+		if (*p != '%')/*checking for the % specifier*/
 		{
-			buffer[buff_ind++] = format[i];
-			if (buff_ind == BUFF_SIZE)
-				print_buffer(buffer, &buff_ind);
-			print_chars++;
+			sum += _putchar(*p);
+			continue;
 		}
+		start = p;
+		p++;
+		while (get_flag(p, &params)) /* while char at p is flag char */
+		{
+			p++; /* next char */
+		}
+		p = get_width(p, &params, ap);
+		p = get_precision(p, &params, ap);
+		if (get_modifier(p, &params))
+			p++;
+		if (!get_specifier(p))
+			sum += print_from_to(start, p,
+				params.l_modifier || params.h_modifier ? p - 1 : 0);
 		else
-		{
-			print_buffer(buffer, &buff_ind);
-			f = get_f(format, &i);
-			w = get_w(format, &i, list);
-			p = get_p(format, &i, list);
-			s = get_s(format, &i);
-			++i;
-			print = handle_print(format, &i, list, buffer,
-				f, w, p, s);
-			if (print == -1)
-				return (-1);
-			print_chars = print_chars + print;
-		}
+			sum += get_print_func(p, ap, &params);
 	}
-
-	print_buffer(buffer, &buff_ind);
-
-	va_end(list);
-
-	return (print_chars);
-}
-
-/**
- * print_buffer - Prints the contents of buffer if existing
- * @buffer: Array of chars
- * @buff_ind: Index to add next char, represents the length.
- */
-void print_buffer(char buffer[], int *buff_ind)
-{
-	if (*buff_ind > 0)
-		write(1, &buffer[0], *buff_ind);
-
-	*buff_ind = 0;
+	_putchar(BUF_FLUSH);
+	va_end(ap);
+	return (sum);
 }

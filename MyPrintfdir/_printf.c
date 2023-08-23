@@ -1,53 +1,12 @@
 #include "main.h"
 
 
-int percent_func(__attribute__((unused))va_list args)
-{
-	return (_putchar('%'));
-}
-
-int print_char(va_list args)
-{
-	char ch = va_arg(args, int);
-
-	return (_putchar(ch));
-}
-
-int print_str(va_list args)
-{
-	char *ptr = va_arg(args, char *);
-	int i = 0;
-
-	if (ptr == NULL)
-		return (-1);
-
-	while (ptr[i] != '\0')
-	{
-		_putchar(ptr[i]);
-		i++;
-	}
-	return (i);
-}
-
-int print_decimal(va_list args)
-{
-	int num = va_arg(args, int);
-
-	return (_putchar(num));
-}
 
 int _printf(const char *format, ...)
 {
-	fmt fms[] = {
-		{"%", percent_func},
-		{"c", print_char},
-		{"s", print_str},
-		{"d", print_decimal},
-		{'\0', NULL}
-	};
-	int j;
 	int sum = 0;
 	char *t;
+	int (*f)(va_list);
 /*	char *ptr;*/
 	va_list args;
 
@@ -64,17 +23,23 @@ int _printf(const char *format, ...)
 		}
 		else if (*t == '%')
 		{
-			for (j = 0; fms[j].spec != NULL; j++)
+			f = check_specifier(t + 1);
+
+			if (f != NULL)
 			{
-				if (*(t + 1) == *(fms[j].spec))
-				{
-					fms[j].print(args);
-					t++;
-				}
-					
+				sum += f(args);
+				t++;
+				continue;
+			}
+			if (t + 1 == NULL)
+				break;
+			else if (t + 1 != NULL)
+			{
+				sum += _putchar(*(t + 1));
+				t++;
+				continue;
 			}
 		}
-		
 	}
 
 	va_end(args);

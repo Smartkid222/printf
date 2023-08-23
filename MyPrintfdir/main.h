@@ -13,4 +13,14 @@ typedef struct formatter {
 int _putchar(char);
 int _printf(const char *format, ...);
 
+
+int print_percent(va_list);
+int print_char(va_list);
+int print_str(va_list);
+int print_decimal(va_list);
+
+int (*check_specifier(char *))(va_list);
+int _strlen(char *);
+
+
 #endif
